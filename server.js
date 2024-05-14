@@ -76,27 +76,20 @@ async function runChat(userInput, chatHistory) {
   });
 
   const result = await chat.sendMessage(userInput);
-  const response = result.response;
-  return response.text();
+  const responseText = result.response.text();
+
+  // Check if the response contains a URL
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const responseWithLinks = responseText.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank">${url}</a>`;
+  });
+
+  return responseWithLinks;
 }
 
-// app.post("/chat", async (req, res) => {
-//   try {
-//     const userInput = req.body?.userInput;
-//     console.log("Incoming /chat req", userInput);
-//     if (!userInput) {
-//       return res.status(400).json({ error: "Invalid request body" });
-//     }
-
-//     const response = await runChat(userInput);
-//     res.json({ response });
-//   } catch (error) {
-//     console.error("Error in chat endpoint:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-
-app.post("/chat-history/:id", async (req, res) => {
+// check if the response contains a URL
+const urlRegex = /(https?:\/\/[^\s]+)/g;
+const responseContainsURL = app.post("/chat-history/:id", async (req, res) => {
   try {
     const chatHistoryId = req.params.id;
     const userInput = req.body?.userInput;
