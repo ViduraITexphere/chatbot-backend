@@ -1,9 +1,9 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { ObjectId } = mongoose.Types;
 const ChatModel = require("./models/data");
+const transcriptRouter = require("./routes/transcriptRoutes");
 
 const {
   GoogleGenerativeAI,
@@ -25,6 +25,8 @@ mongoose.connect(db_url);
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");
 });
+
+app.use("/", transcriptRouter);
 
 async function runChat(userInput, chatHistory) {
   const genAI = new GoogleGenerativeAI(API_KEY);

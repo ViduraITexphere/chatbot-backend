@@ -5,6 +5,13 @@ const dataSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  transcripts: [
+    {
+      sender: String,
+      message: String,
+      timestamp: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const ChatModel = mongoose.model("datas", dataSchema);
